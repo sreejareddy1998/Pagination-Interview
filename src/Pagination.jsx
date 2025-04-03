@@ -4,12 +4,21 @@ import { Productcard } from './Productcard';
 export const Pagination = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [loading,setLoading]=useState(true)
   const PAGE_SIZE = 10;
 
   const fetchData = async () => {
-    const data = await fetch('https://dummyjson.com/products?limit=500');
-    const json = await data.json();
-    setProducts(json.products);
+    try{
+      const data = await fetch('https://dummyjson.com/products?limit=500');
+      const json = await data.json();
+      setProducts(json.products);
+      setLoading(false)
+    }
+    catch(err){
+      console.log("Error in Loading data",err)
+      setLoading(false)
+    }
+    
   };
   const handlePageChange = (n) => {
     setCurrentPage(n);
@@ -29,7 +38,7 @@ export const Pagination = () => {
     fetchData();
   }, []);
 
-  return !products.length ? (
+  return loading? <h1>Loading Prdocuts</h1>: !products.length ? (
     <h1>No Products Found</h1>
   ) : (
     <div className="App">
